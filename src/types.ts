@@ -22,6 +22,8 @@ export interface Theme {
   timelineContainer?: object;
   contentStyle?: ViewStyle;
   selectedDayStyle?: ViewStyle;
+  knobContainer?: ViewStyle;
+  textDayHeaderStyle?: TextStyle;
   event?: object;
   eventTitle?: object;
   eventSummary?: object;
