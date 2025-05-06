@@ -21,6 +21,7 @@ export type DateData = {
 export interface Theme {
   timelineContainer?: object;
   contentStyle?: ViewStyle;
+  selectedDayStyle?: ViewStyle;
   event?: object;
   eventTitle?: object;
   eventSummary?: object;
