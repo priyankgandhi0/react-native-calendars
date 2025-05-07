@@ -86,7 +86,6 @@ export default function styleConstructor(theme: Theme = {}) {
       fontFamily: appStyle.textDayHeaderFontFamily,
       fontWeight: appStyle.textDayHeaderFontWeight,
       color: appStyle.textSectionTitleColor,
-      ...appStyle.dayHeaderStyle
     },
     monthView: {
       backgroundColor: appStyle.calendarBackground
