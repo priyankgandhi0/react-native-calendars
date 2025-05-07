@@ -50,7 +50,8 @@ export default function (theme: Theme = {}) {
     week: {
       marginTop: 7,
       flexDirection: 'row',
-      justifyContent: 'space-around'
+      justifyContent: 'space-around',
+      ...appStyle.weekStyle
     },
     partialWeek: {
       paddingRight: 0
