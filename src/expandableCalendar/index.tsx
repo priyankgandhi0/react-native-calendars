@@ -198,12 +198,11 @@ const ExpandableCalendar = forwardRef<ExpandableCalendarRef, ExpandableCalendarP
     console.log('horizontal',horizontal);
     
     if (!horizontal) {
-      console.log('expandableCalendarOptions',expandableCalendarOptions);
-      let height = expandableCalendarOptions?.openCalendarHeight || constants.screenHeight;
-      
-      return Math.max(height, constants.screenWidth);
+      return Math.max(constants.screenHeight, constants.screenWidth);
     }
-    return headerHeight + (Week_Height * (numberOfWeeks.current)) + (hideKnob ? 0 : Knob_Container_Height);
+    let height = expandableCalendarOptions?.openCalendarHeight || headerHeight + (Week_Height * (numberOfWeeks.current)) + (hideKnob ? 0 : Knob_Container_Height);
+
+    return height;
   };
   const openHeight = useRef(getOpenHeight());
   const closedHeight = useMemo(() => headerHeight + Week_Height + (hideKnob || Number(numberOfDays) > 1 ? 0 : Knob_Container_Height), [numberOfDays, hideKnob, headerHeight]);
