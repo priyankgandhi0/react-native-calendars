@@ -195,22 +195,24 @@ const ExpandableCalendar = forwardRef<ExpandableCalendarRef, ExpandableCalendarP
   let Week_Height = expandableCalendarOptions?.weekHeight || WEEK_HEIGHT;
   let Knob_Container_Height = expandableCalendarOptions?.knobContainerHeight || KNOB_CONTAINER_HEIGHT;
   const getOpenHeight = () => {
-    console.log('horizontal',horizontal);
-    
     if (!horizontal) {
       return Math.max(constants.screenHeight, constants.screenWidth);
     }
-    let height = expandableCalendarOptions?.openCalendarHeight || headerHeight + (Week_Height * (numberOfWeeks.current)) + (hideKnob ? 0 : Knob_Container_Height);
+    let height = expandableCalendarOptions?.openCalendarHeight || (headerHeight + (Week_Height * (numberOfWeeks.current)) + (hideKnob ? 0 : Knob_Container_Height));
 
     return height;
   };
   const openHeight = useRef(getOpenHeight());
-  const closedHeight = useMemo(() => headerHeight + Week_Height + (hideKnob || Number(numberOfDays) > 1 ? 0 : Knob_Container_Height), [numberOfDays, hideKnob, headerHeight]);
+
+  const closedHeight = useMemo(() => {
+    let closeHeight = expandableCalendarOptions?.closedCalendarHeight || (headerHeight + Week_Height + (hideKnob || Number(numberOfDays) > 1 ? 0 : Knob_Container_Height));
+    return closeHeight;
+    }, [numberOfDays, hideKnob, headerHeight]);
+
   const startHeight = useMemo(() => isOpen ? openHeight.current : closedHeight, [closedHeight, isOpen]);
   const _height = useRef(startHeight);
   const deltaY = useMemo(() => new Animated.Value(startHeight), [startHeight]);
   const headerDeltaY = useRef(new Animated.Value(isOpen ? -headerHeight : 0));
-console.log('startHeight',startHeight);
 
   useEffect(() => {
     _height.current = startHeight;
@@ -219,8 +221,6 @@ console.log('startHeight',startHeight);
 
   useEffect(() => {
     openHeight.current = getOpenHeight();
-    console.log('openHeight.current',openHeight.current);
-    
   } ,[headerHeight]);
 
 
