@@ -193,9 +193,11 @@ const CalendarHeader = forwardRef((props: CalendarHeaderProps, ref) => {
       }
 
       return (
-        <Text allowFontScaling={false} key={index} style={dayStyle} numberOfLines={1} accessibilityLabel={''} testID={`${testID}.dayName_${day}`}>
+        <View key={index} accessibilityLabel={''} testID={`${testID}.dayName_${day}`} style={theme?.dayHeaderStyle}>
+        <Text allowFontScaling={false} style={dayStyle} numberOfLines={1}>
           {day}
         </Text>
+        </View>
       );
     });
   }, [firstDay, current, numberOfDaysCondition, numberOfDays, disabledDaysIndexes]);
@@ -271,7 +273,7 @@ const CalendarHeader = forwardRef((props: CalendarHeaderProps, ref) => {
       
       return (
         <View
-          style={[dayNamesStyle, theme?.dayHeaderStyle]}
+          style={dayNamesStyle}
           testID={`${testID}.dayNames`}
           importantForAccessibility={'no-hide-descendants'}
         >
