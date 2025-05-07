@@ -625,7 +625,7 @@ const ExpandableCalendar = forwardRef<ExpandableCalendarRef, ExpandableCalendarP
   };
 
   return (
-    <View testID={testID} style={[containerStyle,{bacjgroundColor: 'red'}]}>
+    <View testID={testID} style={[containerStyle,{backgroundColor: 'red'}]}>
       {screenReaderEnabled ? (
         <Calendar
           testID={`${testID}.calendarAccessible`}
