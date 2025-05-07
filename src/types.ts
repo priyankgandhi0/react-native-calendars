@@ -25,6 +25,8 @@ export interface Theme {
   knobContainer?: ViewStyle;
   dayHeaderStyle?: ViewStyle;
   weekStyle?: ViewStyle;
+  monthViewStyle?: ViewStyle;
+  dayContainerStyle?: ViewStyle;
   calendarContainer?: ViewStyle;
   textDayHeaderStyle?: TextStyle;
   event?: object;

@@ -43,8 +43,8 @@ const CalendarListItem = React.memo((props: CalendarListItemProps) => {
         width: calendarWidth,
         minHeight: calendarHeight
       }, 
+      propsStyle,
       style.current.calendar,
-      propsStyle
     ];
   }, [calendarWidth, calendarHeight, propsStyle]);
   
