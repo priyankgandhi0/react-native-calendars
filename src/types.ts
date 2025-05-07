@@ -121,3 +121,9 @@ export interface DayAgenda {
   reservation?: AgendaEntry;
   date?: XDate;
 }
+
+export interface ExpandableCalendarOptions{
+  openCalendarHeight?: number;
+  closeCalendarHeight?: number;
+  knobHeight?: number;
+}

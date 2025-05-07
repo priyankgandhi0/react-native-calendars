@@ -138,6 +138,7 @@ const ExpandableCalendar = forwardRef<ExpandableCalendarRef, ExpandableCalendarP
     onPressArrowRight,
     renderArrow,
     testID,
+    expandableCalendarOptions,
     ...others
   } = props;
 
@@ -191,14 +192,19 @@ const ExpandableCalendar = forwardRef<ExpandableCalendarRef, ExpandableCalendarP
 
   const [position, setPosition] = useState(numberOfDays ? Positions.CLOSED : initialPosition);
   const isOpen = position === Positions.OPEN;
+  let Week_Height = expandableCalendarOptions?.weekHeight || WEEK_HEIGHT;
+  let Knob_Container_Height = expandableCalendarOptions?.knobContainerHeight || KNOB_CONTAINER_HEIGHT;
   const getOpenHeight = () => {
     if (!horizontal) {
-      return Math.max(constants.screenHeight, constants.screenWidth);
+      console.log('expandableCalendarOptions',expandableCalendarOptions);
+      let height = expandableCalendarOptions?.openCalendarHeight || constants.screenHeight;
+      
+      return Math.max(height, constants.screenWidth);
     }
-    return headerHeight + (WEEK_HEIGHT * (numberOfWeeks.current)) + (hideKnob ? 0 : KNOB_CONTAINER_HEIGHT);
+    return headerHeight + (Week_Height * (numberOfWeeks.current)) + (hideKnob ? 0 : Knob_Container_Height);
   };
   const openHeight = useRef(getOpenHeight());
-  const closedHeight = useMemo(() => headerHeight + WEEK_HEIGHT + (hideKnob || Number(numberOfDays) > 1 ? 0 : KNOB_CONTAINER_HEIGHT), [numberOfDays, hideKnob, headerHeight]);
+  const closedHeight = useMemo(() => headerHeight + Week_Height + (hideKnob || Number(numberOfDays) > 1 ? 0 : Knob_Container_Height), [numberOfDays, hideKnob, headerHeight]);
   const startHeight = useMemo(() => isOpen ? openHeight.current : closedHeight, [closedHeight, isOpen]);
   const _height = useRef(startHeight);
   const deltaY = useMemo(() => new Animated.Value(startHeight), [startHeight]);
@@ -229,7 +235,7 @@ const ExpandableCalendar = forwardRef<ExpandableCalendarRef, ExpandableCalendarP
 
   /** Styles */
 
-  const style = useRef(styleConstructor(theme));
+  const style = useRef(styleConstructor(theme, expandableCalendarOptions));
   const themeObject = Object.assign(headerStyleOverride, theme);
 
   const _wrapperStyles = useRef({style: {height: startHeight}});
