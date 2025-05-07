@@ -23,6 +23,8 @@ export interface Theme {
   contentStyle?: ViewStyle;
   selectedDayStyle?: ViewStyle;
   knobContainer?: ViewStyle;
+  dayHeaderStyle?: ViewStyle;
+  calendarContainer?: ViewStyle;
   textDayHeaderStyle?: TextStyle;
   event?: object;
   eventTitle?: object;

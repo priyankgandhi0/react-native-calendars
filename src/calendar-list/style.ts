@@ -9,7 +9,8 @@ export default function getStyle(theme: Theme = {}) {
       flex: Platform.OS === 'web' ? 1 : undefined
     },
     container: {
-      backgroundColor: appStyle.calendarBackground
+      backgroundColor: appStyle.calendarBackground,
+      ...appStyle.calendarContainer
     },
     placeholder: {
       backgroundColor: appStyle.calendarBackground,
