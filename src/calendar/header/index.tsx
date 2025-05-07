@@ -125,6 +125,10 @@ const CalendarHeader = forwardRef((props: CalendarHeaderProps, ref) => {
     return [style.current.partialWeek, {paddingLeft: timelineLeftInset}];
   }, [timelineLeftInset]);
   const dayNamesStyle = useMemo(() => {
+    console.log('numberOfDaysCondition',numberOfDaysCondition);
+    console.log('partialWeekStyle',partialWeekStyle);
+
+    
     return [style.current.week, numberOfDaysCondition ? partialWeekStyle : undefined];
   }, [numberOfDaysCondition, partialWeekStyle]);
   const hitSlop: Insets | undefined = useMemo(
@@ -263,11 +267,14 @@ const CalendarHeader = forwardRef((props: CalendarHeaderProps, ref) => {
   };
 
   const renderWeekNumbersSpace = () => {
+    console.log('showWeekNumbers', showWeekNumbers);
     return showWeekNumbers && <View style={style.current.dayHeader}/>;
   };
 
   const renderDayNames = () => {
     if (!hideDayNames) {
+      console.log('hideDayNames', hideDayNames);
+      
       return (
         <View
           style={dayNamesStyle}
