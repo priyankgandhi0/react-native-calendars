@@ -163,11 +163,8 @@ const CalendarList = (props: CalendarListProps & ContextProp, ref: any) => {
 
   const scrollToMonth = useCallback(
     (date: XDate | string) => {
-      console.log('asdasdadaddsd');
-
       const scrollTo = parseDate(date);
       const diffMonths = Math.round(initialDate?.current?.clone().setDate(1).diffMonths(scrollTo?.clone().setDate(1)));
-      console.log('diffMonths', diffMonths);
 
       const scrollAmount = calendarSize * (shouldFixRTL ? pastScrollRange - diffMonths : pastScrollRange + diffMonths);
 
@@ -187,7 +184,6 @@ const CalendarList = (props: CalendarListProps & ContextProp, ref: any) => {
 
   useEffect(() => {
     const subscription = Dimensions.addEventListener('change', ({window}) => {
-      console.log('width', window.width);
       setCalendarUpdatedWidth(window.width);
     });
 
