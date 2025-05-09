@@ -2,7 +2,7 @@ import findIndex from 'lodash/findIndex';
 import PropTypes from 'prop-types';
 import XDate from 'xdate';
 import React, {forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState} from 'react';
-import {AccessibilityInfo, FlatList, FlatListProps, View, ViewStyle} from 'react-native';
+import {AccessibilityInfo, Dimensions, FlatList, FlatListProps, View, ViewStyle} from 'react-native';
 
 import {extractCalendarProps, extractHeaderProps} from '../componentUpdater';
 import {parseDate, toMarkingFormat, xdateToData} from '../interface';
@@ -106,9 +106,12 @@ const CalendarList = (props: CalendarListProps & ContextProp, ref: any) => {
     importantForAccessibility
   } = props;
 
+  const [calendarUpdatedWidth, setCalendarUpdatedWidth] = useState(calendarWidth);
+  const hasScrolledToInitialMonth = useRef(false);
+
   const calendarProps = extractCalendarProps(props);
   const headerProps = extractHeaderProps(props);
-  const calendarSize = horizontal ? calendarWidth : calendarHeight;
+  const calendarSize = horizontal ? calendarUpdatedWidth : calendarHeight;
   const shouldUseStaticHeader = staticHeader && horizontal;
 
   const [currentMonth, setCurrentMonth] = useState(parseDate(current));
@@ -121,7 +124,7 @@ const CalendarList = (props: CalendarListProps & ContextProp, ref: any) => {
   const shouldMeasureHeader = useRef(true);
 
   const style = useRef(styleConstructor(theme));
-  const list = useRef<FlatList>();
+  const list = useRef<any>();
   const range = useRef(horizontal ? 1 : 3);
   const initialDate = useRef(parseDate(current) || new XDate());
   const visibleMonth = useRef(currentMonth);
@@ -158,19 +161,38 @@ const CalendarList = (props: CalendarListProps & ContextProp, ref: any) => {
     [items]
   );
 
+  const scrollToMonth = useCallback(
+    (date: XDate | string) => {
+      console.log('asdasdadaddsd');
+
+      const scrollTo = parseDate(date);
+      const diffMonths = Math.round(initialDate?.current?.clone().setDate(1).diffMonths(scrollTo?.clone().setDate(1)));
+      console.log('diffMonths', diffMonths);
+
+      const scrollAmount = calendarSize * (shouldFixRTL ? pastScrollRange - diffMonths : pastScrollRange + diffMonths);
+
+      if (scrollAmount !== 0) {
+        list?.current?.scrollToOffset({offset: scrollAmount, animated: animateScroll});
+      }
+    },
+    [calendarSize, shouldFixRTL, pastScrollRange, animateScroll]
+  );
+
   useEffect(() => {
-    if (current) {
+    if (current && !hasScrolledToInitialMonth.current) {
       scrollToMonth(new XDate(current));
+      hasScrolledToInitialMonth.current = true;
     }
-    if (initialDate.current) {
-      // initialDateIndex;
-      list.current?.scrollToIndex({
-        index: initialDateIndex
-        // animated: true,
-        // viewPosition: 0.5
-      });
-    }
-  }, [current, initialDateIndex]);
+  }, [current, scrollToMonth]);
+
+  useEffect(() => {
+    const subscription = Dimensions.addEventListener('change', ({window}) => {
+      console.log('width', window.width);
+      setCalendarUpdatedWidth(window.width);
+    });
+
+    return () => subscription?.remove();
+  }, []);
 
   useDidUpdate(() => {
     const currMont = currentMonth?.clone();
@@ -204,19 +226,6 @@ const CalendarList = (props: CalendarListProps & ContextProp, ref: any) => {
     }
   };
 
-  const scrollToMonth = useCallback(
-    (date: XDate | string) => {
-      const scrollTo = parseDate(date);
-      const diffMonths = Math.round(initialDate?.current?.clone().setDate(1).diffMonths(scrollTo?.clone().setDate(1)));
-      const scrollAmount = calendarSize * (shouldFixRTL ? pastScrollRange - diffMonths : pastScrollRange + diffMonths);
-
-      if (scrollAmount !== 0) {
-        list?.current?.scrollToOffset({offset: scrollAmount, animated: animateScroll});
-      }
-    },
-    [calendarSize, shouldFixRTL, pastScrollRange, animateScroll]
-  );
-
   const addMonth = useCallback(
     (count: number) => {
       const day = currentMonth?.clone().addMonths(count, true);
@@ -226,7 +235,7 @@ const CalendarList = (props: CalendarListProps & ContextProp, ref: any) => {
       scrollToMonth(day);
       setCurrentMonth(day);
     },
-    [currentMonth, scrollToMonth]
+    [currentMonth, getDateIndex, scrollToMonth]
   );
 
   const getMarkedDatesForItem = useCallback(
@@ -242,13 +251,16 @@ const CalendarList = (props: CalendarListProps & ContextProp, ref: any) => {
     [markedDates]
   );
 
-  const getItemLayout = useCallback((_: ArrayLike<XDate> | undefined | null, index: number) => {
-    return {
-      length: calendarSize,
-      offset: calendarSize * index,
-      index
-    };
-  }, []);
+  const getItemLayout = useCallback(
+    (_: ArrayLike<XDate> | undefined | null, index: number) => {
+      return {
+        length: calendarSize,
+        offset: calendarSize * index,
+        index
+      };
+    },
+    [calendarSize]
+  );
 
   const isDateInRange = useCallback(
     date => {
@@ -279,7 +291,7 @@ const CalendarList = (props: CalendarListProps & ContextProp, ref: any) => {
           style={calendarStyle}
           // @ts-expect-error - type mismatch - ScrollView's 'horizontal' is nullable
           horizontal={horizontal}
-          calendarWidth={calendarWidth}
+          calendarWidth={calendarUpdatedWidth}
           calendarHeight={calendarHeight}
           scrollToMonth={scrollToMonth}
           visible={isDateInRange(item)}
@@ -287,7 +299,18 @@ const CalendarList = (props: CalendarListProps & ContextProp, ref: any) => {
         />
       );
     },
-    [horizontal, calendarStyle, calendarWidth, testID, getMarkedDatesForItem, isDateInRange, calendarProps]
+    [
+      testID,
+      onHeaderLayout,
+      calendarProps,
+      getMarkedDatesForItem,
+      calendarStyle,
+      horizontal,
+      calendarUpdatedWidth,
+      calendarHeight,
+      scrollToMonth,
+      isDateInRange
+    ]
   );
 
   const renderStaticHeader = () => {
@@ -343,16 +366,18 @@ const CalendarList = (props: CalendarListProps & ContextProp, ref: any) => {
   return (
     <View style={style.current.flatListContainer} testID={testID}>
       <FlatList
+        key={`calendar-${calendarUpdatedWidth}`}
         ref={list}
         windowSize={shouldFixRTL ? pastScrollRange + futureScrollRange + 1 : undefined}
         style={listStyle}
         showsVerticalScrollIndicator={showScrollIndicator}
         showsHorizontalScrollIndicator={showScrollIndicator}
         data={items}
+        extraData={calendarUpdatedWidth}
         renderItem={renderItem}
-        // getItemLayout={getItemLayout}
+        getItemLayout={getItemLayout}
         initialNumToRender={range.current}
-        // initialScrollIndex={initialDateIndex}
+        initialScrollIndex={initialDateIndex}
         viewabilityConfigCallbackPairs={viewabilityConfigCallbackPairs.current}
         testID={`${testID}.list`}
         onLayout={onLayout}

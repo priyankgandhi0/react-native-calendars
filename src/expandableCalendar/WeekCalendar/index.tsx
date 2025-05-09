@@ -1,6 +1,6 @@
 import XDate from 'xdate';
 import React, {useCallback, useContext, useEffect, useMemo, useRef, useState} from 'react';
-import {FlatList, View, ViewToken} from 'react-native';
+import {Dimensions, FlatList, View, ViewToken} from 'react-native';
 import {sameWeek, onSameDateRange, getWeekDates} from '../../dateutils';
 import {toMarkingFormat} from '../../interface';
 import {DateData, MarkedDates} from '../../types';
@@ -43,6 +43,8 @@ const WeekCalendar = (props: WeekCalendarProps) => {
 
   const shouldFixRTL = useMemo(() => !constants.isRN73() && constants.isAndroidRTL, []);
 
+  const [calendarUpdatedWidth, setCalendarUpdatedWidth] = useState(calendarWidth || constants?.screenWidth);
+
   useDidUpdate(() => {
     items.current = getDatesArray(date, firstDay, numberOfDays);
     setListData(items.current);
@@ -51,7 +53,11 @@ const WeekCalendar = (props: WeekCalendarProps) => {
   }, [numberOfDays]);
 
   useEffect(() => {
-    list?.current?.scrollToIndex({index: NUMBER_OF_PAGES, animated: false});
+    const subscription = Dimensions.addEventListener('change', ({window}) => {
+      setCalendarUpdatedWidth(window.width);
+    });
+
+    return () => subscription?.remove();
   }, []);
 
   useDidUpdate(() => {
@@ -80,10 +86,6 @@ const WeekCalendar = (props: WeekCalendarProps) => {
     }
   }, [date, updateSource, shouldFixRTL]);
 
-  const containerWidth = useMemo(() => {
-    return calendarWidth ?? constants.screenWidth;
-  }, [calendarWidth]);
-
   const _onDayPress = useCallback(
     (value: DateData) => {
       if (onDayPress) {
@@ -92,26 +94,29 @@ const WeekCalendar = (props: WeekCalendarProps) => {
         setDate?.(value.dateString, UpdateSources.DAY_PRESS);
       }
     },
-    [onDayPress]
+    [onDayPress, setDate]
   );
 
-  const getCurrentWeekMarkings = useCallback((date: string, markings?: MarkedDates): MarkedDates | undefined => {
-    if (!markings) {
-      return;
-    }
-    const dates = getWeekDates(date, firstDay) as XDate[] | undefined;
-    return dates?.reduce((acc, date) => {
-      const dateString = toMarkingFormat(date);
-      return {
-        ...acc,
-        ...(markings[dateString] && {[dateString]: markings[dateString]})
-      };
-    }, {});
-  }, []);
+  const getCurrentWeekMarkings = useCallback(
+    (date: string, markings?: MarkedDates): MarkedDates | undefined => {
+      if (!markings) {
+        return;
+      }
+      const dates = getWeekDates(date, firstDay) as XDate[] | undefined;
+      return dates?.reduce((acc, date) => {
+        const dateString = toMarkingFormat(date);
+        return {
+          ...acc,
+          ...(markings[dateString] && {[dateString]: markings[dateString]})
+        };
+      }, {});
+    },
+    [firstDay]
+  );
 
   const weekStyle = useMemo(() => {
-    return [{width: containerWidth}, propsStyle];
-  }, [containerWidth, propsStyle]);
+    return [{width: calendarUpdatedWidth}, propsStyle];
+  }, [calendarUpdatedWidth, propsStyle]);
 
   const renderItem = useCallback(
     ({item}: {item: string}) => {
@@ -132,7 +137,18 @@ const WeekCalendar = (props: WeekCalendarProps) => {
         />
       );
     },
-    [firstDay, _onDayPress, context, date, markedDates]
+    [
+      date,
+      firstDay,
+      context,
+      getCurrentWeekMarkings,
+      markedDates,
+      others,
+      weekStyle,
+      _onDayPress,
+      numberOfDays,
+      timelineLeftInset
+    ]
   );
 
   const keyExtractor = useCallback(item => item, []);
@@ -152,12 +168,12 @@ const WeekCalendar = (props: WeekCalendarProps) => {
   const getItemLayout = useCallback(
     (_, index: number) => {
       return {
-        length: containerWidth,
-        offset: containerWidth * index,
+        length: calendarUpdatedWidth,
+        offset: calendarUpdatedWidth * index,
         index
       };
     },
-    [containerWidth]
+    [calendarUpdatedWidth]
   );
 
   const onEndReached = useCallback(() => {
@@ -197,7 +213,7 @@ const WeekCalendar = (props: WeekCalendarProps) => {
         }
       }
     },
-    [onEndReached, shouldFixRTL]
+    [onEndReached, setDate, shouldFixRTL]
   );
 
   const viewabilityConfigCallbackPairs = useRef([
@@ -218,14 +234,16 @@ const WeekCalendar = (props: WeekCalendarProps) => {
           ref={list}
           style={style.current.container}
           data={listData}
+          extraData={calendarUpdatedWidth}
+          key={`calendar-${calendarUpdatedWidth}`}
           horizontal
           showsHorizontalScrollIndicator={false}
           pagingEnabled
           scrollEnabled
           renderItem={renderItem}
           keyExtractor={keyExtractor}
-          // initialScrollIndex={NUMBER_OF_PAGES}
-          // getItemLayout={getItemLayout}
+          initialScrollIndex={NUMBER_OF_PAGES}
+          getItemLayout={getItemLayout}
           viewabilityConfigCallbackPairs={viewabilityConfigCallbackPairs.current}
           onEndReached={onEndReached}
           onEndReachedThreshold={1 / NUM_OF_ITEMS}
