@@ -85,7 +85,7 @@ export default function styleConstructor(theme: Theme = {}, expandableCalendarOp
       fontSize: appStyle.textDayHeaderFontSize,
       fontFamily: appStyle.textDayHeaderFontFamily,
       fontWeight: appStyle.textDayHeaderFontWeight,
-      color: appStyle.textSectionTitleColor,
+      color: appStyle.textSectionTitleColor
     },
     monthView: {
       backgroundColor: appStyle.calendarBackground
@@ -125,7 +125,8 @@ export default function styleConstructor(theme: Theme = {}, expandableCalendarOp
     },
     arrowImage: {
       tintColor: appStyle.arrowColor,
-      transform: constants.isRTL ? [{scaleX: -1}] : undefined
+      transform: constants.isRTL ? [{scaleX: -1}] : undefined,
+      ...appStyle.arrowImageStyle
     },
     contextWrapper: {
       flex: 1

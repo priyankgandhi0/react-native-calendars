@@ -1,4 +1,4 @@
-import {ViewStyle, TextStyle} from 'react-native';
+import {ViewStyle, TextStyle, Image, ImageStyle} from 'react-native';
 import {MarkingProps} from './calendar/day/marking';
 import {CalendarContextProps} from './expandableCalendar/Context';
 
@@ -73,6 +73,7 @@ export interface Theme {
   textDayStyle?: TextStyle;
   dotStyle?: object;
   arrowStyle?: ViewStyle;
+  arrowImageStyle?: ImageStyle;
   todayBackgroundColor?: string;
   disabledDotColor?: string;
   inactiveDotColor?: string;
@@ -122,7 +123,7 @@ export interface DayAgenda {
   date?: XDate;
 }
 
-export interface ExpandableCalendarOptions{
+export interface ExpandableCalendarOptions {
   openCalendarHeight?: number;
   closeCalendarHeight?: number;
   knobHeight?: number;
