@@ -215,7 +215,7 @@ const ExpandableCalendar = forwardRef<ExpandableCalendarRef, ExpandableCalendarP
 
   const closedHeight = useMemo(() => {
     let closeHeight =
-      expandableCalendarOptions?.closedCalendarHeight ||
+      expandableCalendarOptions?.closeCalendarHeight ||
       headerHeight + Week_Height + (hideKnob || Number(numberOfDays) > 1 ? 0 : Knob_Container_Height);
     return closeHeight;
   }, [numberOfDays, hideKnob, headerHeight]);
@@ -673,7 +673,7 @@ const ExpandableCalendar = forwardRef<ExpandableCalendarRef, ExpandableCalendarP
   };
 
   return (
-    <View testID={testID} style={[containerStyle, {backgroundColor: 'red'}]}>
+    <View testID={testID} style={containerStyle}>
       {screenReaderEnabled ? (
         <Calendar
           testID={`${testID}.calendarAccessible`}
