@@ -321,7 +321,7 @@ const CalendarList = (props: CalendarListProps & ContextProp, ref: any) => {
         showsHorizontalScrollIndicator={showScrollIndicator}
         data={items}
         renderItem={renderItem}
-        getItemLayout={getItemLayout}
+        // getItemLayout={getItemLayout}
         initialNumToRender={range.current}
         initialScrollIndex={initialDateIndex}
         viewabilityConfigCallbackPairs={viewabilityConfigCallbackPairs.current}

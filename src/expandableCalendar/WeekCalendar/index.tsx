@@ -230,7 +230,7 @@ const WeekCalendar = (props: WeekCalendarProps) => {
             renderItem={renderItem}
             keyExtractor={keyExtractor}
             initialScrollIndex={NUMBER_OF_PAGES}
-            getItemLayout={getItemLayout}
+            // getItemLayout={getItemLayout}
             viewabilityConfigCallbackPairs={viewabilityConfigCallbackPairs.current}
             onEndReached={onEndReached}
             onEndReachedThreshold={1 / NUM_OF_ITEMS}
