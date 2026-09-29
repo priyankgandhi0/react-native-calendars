@@ -1,4 +1,4 @@
-import {ViewStyle, TextStyle} from 'react-native';
+import {ViewStyle, TextStyle, Image, ImageStyle} from 'react-native';
 import {MarkingProps} from './calendar/day/marking';
 import {CalendarContextProps} from './expandableCalendar/Context';
 
@@ -21,6 +21,14 @@ export type DateData = {
 export interface Theme {
   timelineContainer?: object;
   contentStyle?: ViewStyle;
+  selectedDayStyle?: ViewStyle;
+  knobContainer?: ViewStyle;
+  dayHeaderStyle?: ViewStyle;
+  weekStyle?: ViewStyle;
+  monthViewStyle?: ViewStyle;
+  dayContainerStyle?: ViewStyle;
+  calendarContainer?: ViewStyle;
+  textDayHeaderStyle?: TextStyle;
   event?: object;
   eventTitle?: object;
   eventSummary?: object;
@@ -65,6 +73,7 @@ export interface Theme {
   textDayStyle?: TextStyle;
   dotStyle?: object;
   arrowStyle?: ViewStyle;
+  arrowImageStyle?: ImageStyle;
   todayBackgroundColor?: string;
   disabledDotColor?: string;
   inactiveDotColor?: string;
@@ -112,4 +121,10 @@ export type AgendaSchedule = {
 export interface DayAgenda {
   reservation?: AgendaEntry;
   date?: XDate;
+}
+
+export interface ExpandableCalendarOptions {
+  openCalendarHeight?: number;
+  closeCalendarHeight?: number;
+  knobHeight?: number;
 }

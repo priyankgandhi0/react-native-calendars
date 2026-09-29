@@ -54,7 +54,7 @@ export default function PlaygroundScreen() {
     );
   };
 
-  const renderExpandableCalendar = () => {
+  const renderExpendableCalendar = () => {
     return (
       <CalendarProvider date={INITIAL_DATE}>
         <ExpandableCalendar
@@ -76,7 +76,7 @@ export default function PlaygroundScreen() {
       case elements.LIST:
         return renderCalendarList();
       case elements.EXPANDABLE:
-        return renderExpandableCalendar();
+        return renderExpendableCalendar();
       default:
         return renderCalendar(); 
     }

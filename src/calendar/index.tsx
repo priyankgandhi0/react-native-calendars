@@ -10,7 +10,7 @@ import {page, isGTE, isLTE, sameMonth} from '../dateutils';
 import {xdateToData, parseDate, toMarkingFormat} from '../interface';
 import {getState} from '../day-state-manager';
 import {extractHeaderProps, extractDayProps} from '../componentUpdater';
-import {DateData, Theme, MarkedDates, ContextProp} from '../types';
+import {DateData, Theme, MarkedDates, ContextProp, ExpandableCalendarOptions} from '../types';
 import {useDidUpdate} from '../hooks';
 import styleConstructor from './style';
 import CalendarHeader, {CalendarHeaderProps} from './header';
@@ -20,6 +20,8 @@ import BasicDay from './day/basic';
 export interface CalendarProps extends CalendarHeaderProps, DayProps {
   /** Specify theme properties to override specific styles for calendar parts */
   theme?: Theme;
+  /** Height of calendar, knob, week  */
+  expandableCalendarOptions?: ExpandableCalendarOptions;
   /** Specify style for calendar container element */
   style?: StyleProp<ViewStyle>;
   /** Initially visible month */

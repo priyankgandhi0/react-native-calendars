@@ -1,11 +1,11 @@
 import {StyleSheet, Platform} from 'react-native';
 import * as defaultStyle from '../style';
-import {Theme} from '../types';
+import {ExpandableCalendarOptions, Theme} from '../types';
 import constants from '../commons/constants';
 
 export const KNOB_CONTAINER_HEIGHT = 24;
 
-export default function styleConstructor(theme: Theme = {}) {
+export default function styleConstructor(theme: Theme = {}, expandableCalendarOptions: ExpandableCalendarOptions = {}) {
   const appStyle = {...defaultStyle, ...theme};
 
   return StyleSheet.create({
@@ -34,11 +34,12 @@ export default function styleConstructor(theme: Theme = {}) {
       position: 'absolute',
       left: 0,
       right: 0,
-      height: KNOB_CONTAINER_HEIGHT,
+      height: expandableCalendarOptions?.knobHeight || KNOB_CONTAINER_HEIGHT,
       bottom: 0,
       alignItems: 'center',
       justifyContent: 'center',
-      backgroundColor: appStyle.calendarBackground
+      backgroundColor: appStyle.calendarBackground,
+      ...appStyle.knobContainer
     },
     knob: {
       width: 40,
@@ -124,7 +125,8 @@ export default function styleConstructor(theme: Theme = {}) {
     },
     arrowImage: {
       tintColor: appStyle.arrowColor,
-      transform: constants.isRTL ? [{scaleX: -1}] : undefined
+      transform: constants.isRTL ? [{scaleX: -1}] : undefined,
+      ...appStyle.arrowImageStyle
     },
     contextWrapper: {
       flex: 1

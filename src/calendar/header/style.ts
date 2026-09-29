@@ -50,7 +50,8 @@ export default function (theme: Theme = {}) {
     week: {
       marginTop: 7,
       flexDirection: 'row',
-      justifyContent: 'space-around'
+      justifyContent: 'space-around',
+      ...appStyle.weekStyle
     },
     partialWeek: {
       paddingRight: 0
@@ -58,12 +59,13 @@ export default function (theme: Theme = {}) {
     dayHeader: {
       marginTop: 2,
       marginBottom: 7,
-      width: 32,
+      // width: 32,
       textAlign: 'center',
       fontSize: appStyle.textDayHeaderFontSize,
       fontFamily: appStyle.textDayHeaderFontFamily,
       fontWeight: appStyle.textDayHeaderFontWeight,
-      color: appStyle.textSectionTitleColor
+      color: appStyle.textSectionTitleColor,
+      ...appStyle.textDayHeaderStyle
     },
     disabledDayHeader: {
       color: appStyle.textSectionTitleDisabledColor
