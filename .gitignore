@@ -1,4 +1,4 @@
-node_modules
+﻿node_modules
 npm-debug.log
 .idea
 .vscode
@@ -77,3 +77,5 @@ ios/Podfile.lock
 
 # testing
 /coverage
+.env
+.env.*
